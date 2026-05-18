@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KriptoSim — Simulasi Kriptografi Klasik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">KriptoSim <span>v1.0</span></div>
+  <div class="header-right">
+    <button class="theme-btn" id="themeBtn" title="Toggle tema">🌙</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="hero fade-in">
+    <h1>Simulasi <span>Kriptografi Klasik</span></h1>
+    <p>Eksplorasi 5 algoritma kriptografi klasik dengan visualisasi langkah demi langkah yang transparan dan edukatif</p>
+  </div>
+
+  <div class="info-grid fade-in-delay">
+    <div class="info-card">
+      <div class="info-icon">🔄</div>
+      <div class="info-name">Caesar Cipher</div>
+      <div class="info-desc">Substitusi sederhana dengan pergeseran alfabet sejumlah K posisi</div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🗝️</div>
+      <div class="info-name">Vigenère Cipher</div>
+      <div class="info-desc">Substitusi polialfabetik menggunakan kata kunci berulang</div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">✖️</div>
+      <div class="info-name">Affine Cipher</div>
+      <div class="info-desc">Enkripsi linear dengan dua parameter a dan b: C=(aP+b) mod 26</div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">📐</div>
+      <div class="info-name">Hill Cipher</div>
+      <div class="info-desc">Enkripsi berbasis perkalian matriks untuk blok huruf</div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🎯</div>
+      <div class="info-name">Playfair Cipher</div>
+      <div class="info-desc">Substitusi bigram menggunakan matriks kunci 5×5</div>
+    </div>
+  </div>
+
+  <div class="algo-tabs fade-in-delay">
+    <div class="algo-tab active" data-algo="caesar">Caesar</div>
+    <div class="algo-tab" data-algo="vigenere">Vigenère</div>
+    <div class="algo-tab" data-algo="affine">Affine</div>
+    <div class="algo-tab" data-algo="hill">Hill</div>
+    <div class="algo-tab" data-algo="playfair">Playfair</div>
+  </div>
+
+  <!-- CAESAR -->
+  <div class="algo-panel active fade-in-delay" id="panel-caesar">
+    <div class="main-grid">
+      <div class="card">
+        <div class="card-title">Caesar Cipher — Input</div>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="encrypt" data-algo="caesar">🔒 Enkripsi</button>
+          <button class="mode-btn" data-mode="decrypt" data-algo="caesar">🔓 Dekripsi</button>
+        </div>
+        <div class="form-group">
+          <label>Teks <span>(huruf, spasi, tanda baca)</span></label>
+          <textarea id="caesar-text" placeholder="Masukkan teks di sini..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Shift Key <span>(1 – 25)</span></label>
+          <input type="number" id="caesar-key" value="3" min="1" max="25">
+          <div class="input-hint">Contoh: 3 → A→D, B→E, dst</div>
+        </div>
+        <button class="btn-primary" id="caesar-btn">Proses Caesar Cipher</button>
+        <div class="error-box" id="caesar-error"></div>
+        <div class="result-box" id="caesar-result">
+          <div class="result-label">Hasil</div>
+          <div class="result-text" id="caesar-output"></div>
+          <button class="result-copy" onclick="copyResult('caesar-output')">📋 Salin</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tentang Caesar Cipher</div>
+        <div style="font-size:0.82rem; color:var(--text2); line-height:1.7">
+          <p style="margin-bottom:0.8rem">Caesar Cipher adalah salah satu teknik enkripsi tertua, digunakan Julius Caesar sekitar 58 SM untuk komunikasi militer.</p>
+          <div style="padding:0.8rem; background:var(--bg2); border-radius:8px; font-family:'Space Mono',monospace; font-size:0.78rem; margin-bottom:0.8rem; border:1px solid var(--border)">
+            <div style="color:var(--accent2); margin-bottom:0.3rem">Enkripsi:</div>
+            <div style="color:var(--green)">C = (P + K) mod 26</div>
+            <div style="color:var(--accent2); margin-top:0.5rem; margin-bottom:0.3rem">Dekripsi:</div>
+            <div style="color:var(--yellow)">P = (C - K + 26) mod 26</div>
+          </div>
+          <p>Dimana P = posisi huruf plaintext (A=0), C = posisi ciphertext, K = shift key</p>
+        </div>
+      </div>
+    </div>
+    <div class="steps-panel" id="caesar-steps"></div>
+  </div>
+
+  <!-- VIGENERE -->
+  <div class="algo-panel" id="panel-vigenere">
+    <div class="main-grid">
+      <div class="card">
+        <div class="card-title">Vigenère Cipher — Input</div>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="encrypt" data-algo="vigenere">🔒 Enkripsi</button>
+          <button class="mode-btn" data-mode="decrypt" data-algo="vigenere">🔓 Dekripsi</button>
+        </div>
+        <div class="form-group">
+          <label>Teks</label>
+          <textarea id="vigenere-text" placeholder="Masukkan teks di sini..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Key <span>(kata kunci, huruf saja)</span></label>
+          <input type="text" id="vigenere-key" placeholder="Contoh: SECRET" style="text-transform:uppercase">
+          <div class="input-hint">Key akan diulang sepanjang teks</div>
+        </div>
+        <button class="btn-primary" id="vigenere-btn">Proses Vigenère Cipher</button>
+        <div class="error-box" id="vigenere-error"></div>
+        <div class="result-box" id="vigenere-result">
+          <div class="result-label">Hasil</div>
+          <div class="result-text" id="vigenere-output"></div>
+          <button class="result-copy" onclick="copyResult('vigenere-output')">📋 Salin</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tentang Vigenère Cipher</div>
+        <div style="font-size:0.82rem; color:var(--text2); line-height:1.7">
+          <p style="margin-bottom:0.8rem">Dikembangkan oleh Blaise de Vigenère (1553). Lebih aman dari Caesar karena menggunakan kunci berulang.</p>
+          <div style="padding:0.8rem; background:var(--bg2); border-radius:8px; font-family:'Space Mono',monospace; font-size:0.78rem; margin-bottom:0.8rem; border:1px solid var(--border)">
+            <div style="color:var(--accent2); margin-bottom:0.3rem">Enkripsi:</div>
+            <div style="color:var(--green)">C_i = (P_i + K_i) mod 26</div>
+            <div style="color:var(--accent2); margin-top:0.5rem; margin-bottom:0.3rem">Dekripsi:</div>
+            <div style="color:var(--yellow)">P_i = (C_i - K_i + 26) mod 26</div>
+          </div>
+          <p>K_i = nilai huruf key pada posisi ke-i (berulang sesuai panjang key)</p>
+        </div>
+      </div>
+    </div>
+    <div class="steps-panel" id="vigenere-steps"></div>
+  </div>
+
+  <!-- AFFINE -->
+  <div class="algo-panel" id="panel-affine">
+    <div class="main-grid">
+      <div class="card">
+        <div class="card-title">Affine Cipher — Input</div>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="encrypt" data-algo="affine">🔒 Enkripsi</button>
+          <button class="mode-btn" data-mode="decrypt" data-algo="affine">🔓 Dekripsi</button>
+        </div>
+        <div class="form-group">
+          <label>Teks</label>
+          <textarea id="affine-text" placeholder="Masukkan teks di sini..."></textarea>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem">
+          <div class="form-group">
+            <label>Nilai a <span>(coprime 26)</span></label>
+            <input type="number" id="affine-a" value="5">
+            <div class="input-hint" id="affine-a-hint">Valid: GCD(5,26)=1 ✓</div>
+          </div>
+          <div class="form-group">
+            <label>Nilai b <span>(0–25)</span></label>
+            <input type="number" id="affine-b" value="8">
+          </div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text2); margin-bottom:1rem; padding:0.6rem 0.8rem; background:var(--bg2); border-radius:8px; border:1px solid var(--border)">
+          <span style="color:var(--accent2)">Nilai a yang valid:</span> 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25
+        </div>
+        <button class="btn-primary" id="affine-btn">Proses Affine Cipher</button>
+        <div class="error-box" id="affine-error"></div>
+        <div class="result-box" id="affine-result">
+          <div class="result-label">Hasil</div>
+          <div class="result-text" id="affine-output"></div>
+          <button class="result-copy" onclick="copyResult('affine-output')">📋 Salin</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tentang Affine Cipher</div>
+        <div style="font-size:0.82rem; color:var(--text2); line-height:1.7">
+          <p style="margin-bottom:0.8rem">Affine Cipher adalah kombinasi dari cipher multiplikatif dan Caesar. Nilai <em>a</em> harus coprime dengan 26 agar invertible.</p>
+          <div style="padding:0.8rem; background:var(--bg2); border-radius:8px; font-family:'Space Mono',monospace; font-size:0.78rem; margin-bottom:0.8rem; border:1px solid var(--border)">
+            <div style="color:var(--accent2); margin-bottom:0.3rem">Enkripsi:</div>
+            <div style="color:var(--green)">C = (a·P + b) mod 26</div>
+            <div style="color:var(--accent2); margin-top:0.5rem; margin-bottom:0.3rem">Dekripsi:</div>
+            <div style="color:var(--yellow)">P = a⁻¹·(C - b) mod 26</div>
+            <div style="color:var(--accent2); margin-top:0.5rem; margin-bottom:0.3rem">Syarat:</div>
+            <div style="color:var(--cyan)">GCD(a, 26) = 1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="steps-panel" id="affine-steps"></div>
+  </div>
+
+  <!-- HILL -->
+  <div class="algo-panel" id="panel-hill">
+    <div class="main-grid">
+      <div class="card">
+        <div class="card-title">Hill Cipher — Input</div>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="encrypt" data-algo="hill">🔒 Enkripsi</button>
+          <button class="mode-btn" data-mode="decrypt" data-algo="hill">🔓 Dekripsi</button>
+        </div>
+        <div class="form-group">
+          <label>Teks <span>(hanya huruf, spasi diabaikan)</span></label>
+          <textarea id="hill-text" placeholder="Masukkan teks di sini..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ukuran Matriks Kunci</label>
+          <div class="matrix-size-toggle">
+            <button class="size-btn active" data-size="2">2×2</button>
+            <button class="size-btn" data-size="3">3×3</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Matriks Kunci</label>
+          <div id="hill-matrix" class="matrix-grid size-2"></div>
+        </div>
+        <button class="btn-primary" id="hill-btn">Proses Hill Cipher</button>
+        <div class="error-box" id="hill-error"></div>
+        <div class="result-box" id="hill-result">
+          <div class="result-label">Hasil</div>
+          <div class="result-text" id="hill-output"></div>
+          <button class="result-copy" onclick="copyResult('hill-output')">📋 Salin</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tentang Hill Cipher</div>
+        <div style="font-size:0.82rem; color:var(--text2); line-height:1.7">
+          <p style="margin-bottom:0.8rem">Hill Cipher menggunakan matriks kunci untuk mengenkripsi blok huruf. Teks harus dibersihkan dan dipad dengan X jika panjangnya tidak kelipatan ukuran matriks.</p>
+        </div>
+      </div>
+    </div>
+    <div class="steps-panel" id="hill-steps"></div>
+  </div>
+
+  <!-- PLAYFAIR -->
+  <div class="algo-panel" id="panel-playfair">
+    <div class="main-grid">
+      <div class="card">
+        <div class="card-title">Playfair Cipher — Input</div>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="encrypt" data-algo="playfair">🔒 Enkripsi</button>
+          <button class="mode-btn" data-mode="decrypt" data-algo="playfair">🔓 Dekripsi</button>
+        </div>
+        <div class="form-group">
+          <label>Teks</label>
+          <textarea id="playfair-text" placeholder="Masukkan teks di sini..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Key <span>(huruf saja, J diganti dengan I)</span></label>
+          <input type="text" id="playfair-key" placeholder="Contoh: MONARCHY" style="text-transform:uppercase">
+        </div>
+        <button class="btn-primary" id="playfair-btn">Proses Playfair Cipher</button>
+        <div class="error-box" id="playfair-error"></div>
+        <div class="result-box" id="playfair-result">
+          <div class="result-label">Hasil</div>
+          <div class="result-text" id="playfair-output"></div>
+          <button class="result-copy" onclick="copyResult('playfair-output')">📋 Salin</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tentang Playfair Cipher</div>
+        <div style="font-size:0.82rem; color:var(--text2); line-height:1.7">
+          <p style="margin-bottom:0.8rem">Playfair encrypts letter pairs with a 5×5 key matrix. J diganti I dan teks dipasangkan untuk menghindari huruf ganda dalam satu digraf.</p>
+        </div>
+      </div>
+    </div>
+    <div class="steps-panel" id="playfair-steps"></div>
+  </div>
+
+  <div class="footer fade-in-delay">
+    <div class="footer-text">KriptoSim — dibuat untuk belajar kriptografi klasik.</div>
+  </div>
+</div>
+
+<script src="static/main.js" defer></script>
+</body>
+</html>
