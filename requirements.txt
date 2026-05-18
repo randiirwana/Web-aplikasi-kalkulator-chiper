@@ -1,3 +1,1 @@
-flask>=2.3.0
-gunicorn>=21.2.0
-numpy>=1.24.0
+-r kalkulator/requirements.txt
