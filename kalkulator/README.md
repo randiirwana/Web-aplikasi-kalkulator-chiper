@@ -21,11 +21,24 @@ cd kriptosim
 # Install dependensi
 pip install -r requirements.txt
 
-# Jalankan server
+# Jalankan server lokal
 python app.py
 ```
 
 Buka browser di `http://localhost:5000`
+
+## 🚀 Deploy ke Railway
+
+1. Push repository Anda ke GitHub.
+2. Buat proyek baru di Railway dan hubungkan repository.
+3. Railway akan mendeteksi `Procfile` dan `requirements.txt`.
+4. Pastikan command deploy:
+
+```bash
+web: gunicorn api.index:app --workers 2 --bind 0.0.0.0:$PORT
+```
+
+5. Railway akan menggunakan `runtime.txt` untuk versi Python.
 
 ## 📁 Struktur Proyek
 
