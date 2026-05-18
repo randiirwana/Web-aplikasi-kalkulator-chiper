@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify
-from .algorithms.caesar import caesar_encrypt, caesar_decrypt
-from .algorithms.vigenere import vigenere_encrypt, vigenere_decrypt
-from .algorithms.affine import affine_encrypt, affine_decrypt
-from .algorithms.hill import hill_encrypt, hill_decrypt
-from .algorithms.playfair import playfair_encrypt, playfair_decrypt
+from algorithms.caesar import caesar_encrypt, caesar_decrypt
+from algorithms.vigenere import vigenere_encrypt, vigenere_decrypt
+from algorithms.affine import affine_encrypt, affine_decrypt
+from algorithms.hill import hill_encrypt, hill_decrypt
+from algorithms.playfair import playfair_encrypt, playfair_decrypt
 
 app = Flask(__name__)
 
